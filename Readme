@@ -1,0 +1,382 @@
+# Text Abstractor - Comprehensive NLP Summarization Tool
+
+A powerful, all-in-one Python library for text summarization featuring both **extractive** and **abstractive** methods using state-of-the-art NLP techniques.
+
+![Python](https://img.shields.io/badge/python-3.7+-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+
+## 🌟 Features
+
+### Extractive Summarization
+- **TF-IDF**: Term Frequency-Inverse Document Frequency based extraction
+- **TextRank**: Graph-based ranking algorithm (similar to PageRank)
+- **LexRank**: Advanced graph-based method with IDF-modified cosine similarity
+- **LSA**: Latent Semantic Analysis using SVD decomposition
+
+### Abstractive Summarization
+- **T5**: Google's Text-to-Text Transfer Transformer
+- **BART**: Facebook's Bidirectional and Auto-Regressive Transformer
+- **PEGASUS**: Google's state-of-the-art summarization model
+
+### Additional Features
+- ✅ Multi-document summarization
+- ✅ Method comparison functionality
+- ✅ Customizable summary length
+- ✅ Compression ratio calculation
+- ✅ Sentence scoring and ranking
+- ✅ Flexible preprocessing pipeline
+- ✅ Support for stemming and lemmatization
+- ✅ GPU acceleration support for deep learning models
+
+## 📦 Installation
+
+### Quick Start (Extractive Methods Only)
+```bash
+pip install nltk numpy
+```
+
+### Full Extractive Support
+```bash
+pip install nltk numpy scikit-learn networkx
+```
+
+### Complete Installation (All Methods)
+```bash
+pip install nltk numpy scikit-learn networkx transformers torch
+```
+
+### GPU Support (Recommended for Abstractive Methods)
+```bash
+pip install nltk numpy scikit-learn networkx transformers torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+```
+
+## 🚀 Quick Start
+
+```python
+from text_abstractor import TextAbstractor
+
+# Initialize the abstractor
+abstractor = TextAbstractor()
+
+# Your text
+text = """
+Artificial intelligence is transforming the world. Machine learning 
+algorithms can now perform complex tasks like image recognition and 
+natural language processing. Deep learning has achieved remarkable 
+results in recent years.
+"""
+
+# Extractive summarization
+result = abstractor.summarize(text, method="tfidf", num_sentences=2)
+print(result.summary)
+
+# Abstractive summarization (requires transformers)
+result = abstractor.summarize(text, method="t5", max_length=100)
+print(result.summary)
+```
+
+## 📖 Detailed Usage
+
+### Extractive Summarization
+
+#### TF-IDF Method
+```python
+result = abstractor.summarize(
+    text=your_text,
+    method="tfidf",
+    num_sentences=3
+)
+
+print(f"Summary: {result.summary}")
+print(f"Compression Ratio: {result.compression_ratio:.2%}")
+print(f"Sentences Used: {len(result.sentences_used)}")
+```
+
+#### TextRank Method
+```python
+result = abstractor.summarize(
+    text=your_text,
+    method="textrank",
+    num_sentences=3
+)
+```
+
+#### LexRank Method
+```python
+result = abstractor.summarize(
+    text=your_text,
+    method="lexrank",
+    num_sentences=3
+)
+```
+
+#### LSA Method
+```python
+result = abstractor.summarize(
+    text=your_text,
+    method="lsa",
+    num_sentences=3
+)
+```
+
+### Abstractive Summarization
+
+#### T5 Model
+```python
+result = abstractor.summarize(
+    text=your_text,
+    method="t5",
+    max_length=150,
+    min_length=40
+)
+```
+
+#### BART Model
+```python
+result = abstractor.summarize(
+    text=your_text,
+    method="bart",
+    max_length=150,
+    min_length=40
+)
+```
+
+#### PEGASUS Model
+```python
+result = abstractor.summarize(
+    text=your_text,
+    method="pegasus",
+    max_length=150,
+    min_length=40
+)
+```
+
+### Compare Multiple Methods
+
+```python
+# Compare extractive methods
+results = abstractor.compare_methods(
+    text=your_text,
+    methods=["tfidf", "textrank", "lexrank"],
+    num_sentences=3
+)
+
+for method, result in results.items():
+    print(f"\n{method.upper()}:")
+    print(f"Summary: {result.summary}")
+    print(f"Compression: {result.compression_ratio:.2%}")
+```
+
+### Multi-Document Summarization
+
+```python
+documents = [
+    "First document text...",
+    "Second document text...",
+    "Third document text..."
+]
+
+result = abstractor.multi_document_summarize(
+    documents=documents,
+    method="textrank",
+    num_sentences=5
+)
+
+print(result.summary)
+```
+
+## 🔧 Advanced Usage
+
+### Custom Preprocessing
+
+```python
+from text_abstractor import TextPreprocessor, TFIDFSummarizer
+
+# Create custom preprocessor
+preprocessor = TextPreprocessor(
+    use_stemming=True,
+    use_lemmatization=False
+)
+
+# Use with summarizer
+summarizer = TFIDFSummarizer(preprocessor)
+result = summarizer.summarize(text, num_sentences=3)
+```
+
+### Accessing Sentence Scores
+
+```python
+result = abstractor.summarize(text, method="tfidf", num_sentences=3)
+
+if result.scores:
+    print("Sentence Scores:")
+    for sentence_id, score in result.scores.items():
+        print(f"{sentence_id}: {score:.4f}")
+```
+
+### Custom Model Loading
+
+```python
+from text_abstractor import T5Summarizer
+
+# Load specific T5 variant
+summarizer = T5Summarizer(model_name="t5-base")
+result = summarizer.summarize(text, max_length=200)
+```
+
+## 📊 Method Comparison
+
+| Method | Type | Speed | Quality | Best For |
+|--------|------|-------|---------|----------|
+| TF-IDF | Extractive | ⚡⚡⚡⚡⚡ | ⭐⭐⭐ | Factual content, quick summaries |
+| TextRank | Extractive | ⚡⚡⚡⚡ | ⭐⭐⭐⭐ | General purpose, diverse content |
+| LexRank | Extractive | ⚡⚡⚡ | ⭐⭐⭐⭐ | Multi-document, news articles |
+| LSA | Extractive | ⚡⚡⚡ | ⭐⭐⭐⭐ | Topic-based, longer documents |
+| T5 | Abstractive | ⚡⚡ | ⭐⭐⭐⭐⭐ | General purpose, versatile |
+| BART | Abstractive | ⚡⚡ | ⭐⭐⭐⭐⭐ | News articles, coherent summaries |
+| PEGASUS | Abstractive | ⚡⚡ | ⭐⭐⭐⭐⭐ | Extreme compression, short summaries |
+
+## 🔬 Understanding the Methods
+
+### Extractive Methods
+
+**TF-IDF (Term Frequency-Inverse Document Frequency)**
+- Scores sentences based on important word frequencies
+- Fast and efficient
+- Good for factual content where key terms matter
+
+**TextRank**
+- Graph-based algorithm similar to Google's PageRank
+- Builds similarity graph between sentences
+- Selects sentences that are central to the document's meaning
+
+**LexRank**
+- Advanced graph-based method
+- Uses IDF-modified cosine similarity
+- Excellent for finding consensus in multiple documents
+
+**LSA (Latent Semantic Analysis)**
+- Uses Singular Value Decomposition (SVD)
+- Captures hidden semantic structures
+- Good for topic-based summarization
+
+### Abstractive Methods
+
+**T5 (Text-to-Text Transfer Transformer)**
+- Treats summarization as text generation
+- Very versatile, can handle various text formats
+- Good general-purpose summarizer
+
+**BART (Bidirectional and Auto-Regressive Transformer)**
+- Combines BERT's bidirectional encoder with GPT's autoregressive decoder
+- Excellent for news articles and coherent summaries
+- Produces human-like text
+
+**PEGASUS**
+- Specifically pre-trained for summarization
+- Uses Gap Sentence Generation pre-training
+- State-of-the-art for extreme compression
+
+## 📝 SummaryResult Object
+
+Every summarization method returns a `SummaryResult` object with:
+
+```python
+@dataclass
+class SummaryResult:
+    summary: str                    # Generated summary text
+    method: str                     # Method used
+    original_length: int            # Original text length in characters
+    summary_length: int             # Summary length in characters
+    compression_ratio: float        # summary_length / original_length
+    sentences_used: List[str]       # Sentences in the summary
+    scores: Optional[Dict]          # Sentence scores (if available)
+```
+
+## 🎯 Use Cases
+
+### News Summarization
+```python
+# Use BART for news articles
+result = abstractor.summarize(news_article, method="bart", max_length=150)
+```
+
+### Research Paper Summarization
+```python
+# Use LSA for academic content
+result = abstractor.summarize(research_paper, method="lsa", num_sentences=5)
+```
+
+### Quick Content Preview
+```python
+# Use TF-IDF for fast previews
+result = abstractor.summarize(blog_post, method="tfidf", num_sentences=2)
+```
+
+### Multi-Document Reports
+```python
+# Use LexRank for multiple sources
+result = abstractor.multi_document_summarize(
+    documents=[doc1, doc2, doc3],
+    method="lexrank",
+    num_sentences=7
+)
+```
+
+## ⚠️ Requirements
+
+### Minimum Requirements
+- Python 3.7+
+- nltk
+- numpy
+
+### Recommended Requirements
+- Python 3.8+
+- nltk
+- numpy
+- scikit-learn
+- networkx
+
+### Full Features
+- Python 3.8+
+- All above packages
+- transformers
+- torch (with CUDA support for GPU acceleration)
+
+## 🐛 Troubleshooting
+
+### NLTK Data Not Found
+```python
+import nltk
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+```
+
+### Out of Memory (Abstractive Methods)
+- Use smaller models: `t5-small` instead of `t5-base`
+- Reduce max_length parameter
+- Process text in chunks
+- Use CPU instead of GPU if GPU memory is limited
+
+### Slow Performance
+- For extractive methods: Use TF-IDF for fastest results
+- For abstractive methods: Ensure GPU is being used
+- Reduce input text length
+- Use smaller model variants
+
+## 📚 References
+
+- [TextRank Paper](https://web.eecs.umich.edu/~mihalcea/papers/mihalcea.emnlp04.pdf)
+- [LexRank Paper](https://arxiv.org/abs/1109.2128)
+- [T5 Paper](https://arxiv.org/abs/1910.10683)
+- [BART Paper](https://arxiv.org/abs/1910.13461)
+- [PEGASUS Paper](https://arxiv.org/abs/1912.08777)
+
+## 📬 Support
+
+For issues, questions, or suggestions, please open an issue on GitHub.
+
+---
+
+**Happy Summarizing! 🎉**
